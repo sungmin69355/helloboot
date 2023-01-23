@@ -25,7 +25,8 @@ public class HellobootApplication {
 
 		//직접 스프링컨테이너 생성
 		GenericApplicationContext applicationContext = new GenericApplicationContext();
-		applicationContext.registerBean(HelloController.class);
+		applicationContext.registerBean(HelloController.class); // bean 등록의 순서는 스프링이 알아서 적절하게 등록해준다.
+		applicationContext.registerBean(SimpleHelloService.class);
 		applicationContext.refresh();
 
 		ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory(); //서블릿 웹서버를 쉽게만들어주는 팩토리
