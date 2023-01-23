@@ -11,6 +11,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.context.support.GenericWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -24,7 +26,7 @@ public class HellobootApplication {
 	public static void main(String[] args) {
 
 		//직접 스프링컨테이너 생성
-		GenericApplicationContext applicationContext = new GenericApplicationContext();
+		GenericWebApplicationContext applicationContext = new GenericWebApplicationContext();
 		applicationContext.registerBean(HelloController.class); // bean 등록의 순서는 스프링이 알아서 적절하게 등록해준다.
 		applicationContext.registerBean(SimpleHelloService.class);
 		applicationContext.refresh();
@@ -32,23 +34,10 @@ public class HellobootApplication {
 		ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory(); //서블릿 웹서버를 쉽게만들어주는 팩토리
 		//익명 함수
 		WebServer webServer = serverFactory.getWebServer(servletContext -> {
-			servletContext.addServlet("frontcontroller", new HttpServlet() {
-				@Override
-				protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-					// 인증, 보안, 다국어, 공통 기능
-					if(req.getRequestURI().equals("/hello") && req.getMethod().equals(HttpMethod.GET.name())) {
-						String name = req.getParameter("name");
-
-						HelloController helloController = applicationContext.getBean(HelloController.class);
-						String ref = helloController.hello(name);
-						resp.setContentType(MediaType.TEXT_PLAIN_VALUE);
-					} else if(req.getRequestURI().equals("/user")) {
-						//
-					} else {
-						resp.setStatus(HttpStatus.NOT_FOUND.value());
-					}
-				}
-			}).addMapping("/*");
+			servletContext.addServlet("dispatcherServlet",
+					//DispatcherServlet은 웹환경에서 좀더 편하게 사용할 수 있는 하나의 서블릿(WebApplicationContext를 사용해야한다.)
+					new DispatcherServlet(applicationContext)
+					).addMapping("/*");
 		});
 		webServer.start();
 	}
