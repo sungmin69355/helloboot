@@ -23,6 +23,8 @@ public class HelloController {
     @GetMapping("/hello")
     @ResponseBody //@RestController에는 해당어노테이션이 생략되어있다.
     public String hello(String name) {
-        return helloService.sayHello(Objects.requireNonNull(name));
+        if(name == null || name.trim().length() == 0) throw  new IllegalArgumentException();
+
+        return helloService.sayHello(name);
     }
 }
