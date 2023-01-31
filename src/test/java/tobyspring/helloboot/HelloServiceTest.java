@@ -12,16 +12,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @UnitTest
-@interface FastUnitTest {
-
-}
+@interface FastUnitTest { }
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD}) //ElementType.ANNOTATION_TYPE이 있어야 메타 어노테이션으로 활용가능
 @Test
-@interface UnitTest {
-
-}
+@interface UnitTest { }
 
 public class HelloServiceTest {
     @UnitTest
