@@ -4,8 +4,27 @@ package tobyspring.helloboot;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+@UnitTest
+@interface FastUnitTest {
+
+}
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD}) //ElementType.ANNOTATION_TYPE이 있어야 메타 어노테이션으로 활용가능
+@Test
+@interface UnitTest {
+
+}
+
 public class HelloServiceTest {
-    @Test
+    @UnitTest
     void simpleHelloService() {
         SimpleHelloService simpleHelloService = new SimpleHelloService();
 
@@ -14,7 +33,7 @@ public class HelloServiceTest {
         Assertions.assertThat(ret).isEqualTo("HelloTest");
     }
 
-    @Test
+    @FastUnitTest
     void helloDecorator() {
         HelloDecorator helloDecorator = new HelloDecorator(name -> name);
 
