@@ -1,21 +1,14 @@
-package tobyspring.helloboot;
+package tobyspring.config.autoconfig;
 
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.DispatcherServlet;
 
-@Configuration // @Configuration는 @Component 가지고 있다.
-public class Config {
+@Configuration
+public class TomcatWebServerConfig {
     @Bean
     public ServletWebServerFactory servletWebServerFactory() {
         return new TomcatServletWebServerFactory();
-    }
-
-    @Bean
-    public DispatcherServlet dispatcherServlet() {
-        return new DispatcherServlet();
     }
 }
