@@ -1,4 +1,4 @@
-package tobyspring.config.autoconfig;
+package tobyspring.config;
 
 import org.springframework.context.annotation.Conditional;
 
