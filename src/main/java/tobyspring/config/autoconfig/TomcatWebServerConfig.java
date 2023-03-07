@@ -10,6 +10,7 @@ import tobyspring.config.MyAutoConfiguration;
 
 @MyAutoConfiguration
 @ConditionalMyOnClass("org.apache.catalina.startup.Tomcat")
+@Import(ServerProperties.class)
 public class TomcatWebServerConfig {
 
     @Bean("tomcatServletWebServerFactory")
