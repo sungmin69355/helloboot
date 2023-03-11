@@ -10,6 +10,7 @@ import tobyspring.config.MyAConfigurationProperties;
 import tobyspring.config.MyAutoConfiguration;
 
 import java.text.Annotation;
+import java.util.Map;
 
 @MyAutoConfiguration
 public class PropertyPostProcessorConfig {
@@ -21,7 +22,10 @@ public class PropertyPostProcessorConfig {
                 MyAConfigurationProperties annotation = AnnotationUtils.findAnnotation(bean.getClass(), MyAConfigurationProperties.class);
                 if(annotation == null) return bean;
 
-                return Binder.get(env).bindOrCreate("", bean.getClass());
+                Map<String, Object> attrs = AnnotationUtils.getAnnotationAttributes(annotation);
+                String prefix = (String) attrs.get("prefix");
+
+                return Binder.get(env).bindOrCreate(prefix, bean.getClass());
             }
         };
     }

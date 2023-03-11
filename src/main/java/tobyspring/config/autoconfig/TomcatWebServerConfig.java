@@ -6,11 +6,13 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.*;
 import tobyspring.config.ConditionalMyOnClass;
+import tobyspring.config.EnableMyAutoConfiguration;
+import tobyspring.config.EnableMyConfigurationProperties;
 import tobyspring.config.MyAutoConfiguration;
 
 @MyAutoConfiguration
 @ConditionalMyOnClass("org.apache.catalina.startup.Tomcat")
-@Import(ServerProperties.class)
+@EnableMyConfigurationProperties(ServerProperties.class)
 public class TomcatWebServerConfig {
 
     @Bean("tomcatServletWebServerFactory")
