@@ -3,8 +3,12 @@ package tobyspring.config.autoconfig;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnSingleCandidate;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.jdbc.support.JdbcTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tobyspring.config.ConditionalMyOnClass;
 import tobyspring.config.EnableMyConfigurationProperties;
 import tobyspring.config.MyAutoConfiguration;
@@ -15,6 +19,7 @@ import java.sql.Driver;
 @MyAutoConfiguration
 @ConditionalMyOnClass("org.springframework.jdbc.core.JdbcOperations")
 @EnableMyConfigurationProperties(MyDataSourceProperties.class)
+@EnableTransactionManagement //AOP 역할
 public class DataSourceConfig {
     @Bean
     @ConditionalMyOnClass("com.zaxxer.hikari.HikariDataSource")
@@ -39,5 +44,19 @@ public class DataSourceConfig {
         dataSource.setUsername(properties.getUsername());
         dataSource.setPassword(properties.getPassword());
         return dataSource;
+    }
+
+    @Bean
+    @ConditionalOnSingleCandidate(DataSource.class) //빈 구성정보에 DataSource이 하나만 있을경우 가져와서 사용
+    @ConditionalOnMissingBean
+    JdbcTemplate jdbcTemplate(DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
+
+    @Bean
+    @ConditionalOnSingleCandidate(DataSource.class) //빈 구성정보에 DataSource이 하나만 있을경우 가져와서 사용
+    @ConditionalOnMissingBean
+    JdbcTransactionManager jdbcTransactionManager(DataSource dataSource) {
+        return new JdbcTransactionManager(dataSource);
     }
 }
